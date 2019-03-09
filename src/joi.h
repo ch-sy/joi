@@ -1,12 +1,15 @@
 #include "GLFW/glfw3.h"
+#include "resourceManager.h"
 
 class Joi {
 	private:
 		GLFWwindow * window;
-		void init();
-		void step();
-		void render();
-		void end();
+		ResourceManager resources;
+
+		bool init();
+		bool step();
+		bool render();
+		bool end();
 	public:
-		void run();
+		bool run();
 };

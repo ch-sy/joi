@@ -1,23 +1,34 @@
 #include "joi.h"
 
-void Joi::init() {
-	glfwInit();
-	window = glfwCreateWindow(1024, 768, "Journey on ice", nullptr, nullptr);
+bool Joi::init() {
+	if (glfwInit() == GLFW_FALSE)
+		return false;
+	
+	resources.loadSprites("..\\sprites");
+	window = glfwCreateWindow(1024, 768, "Journey on ice", NULL, NULL);
+	if (window == NULL)
+		return false;
+
+	return true;
 }
 
-void Joi::step() {
+bool Joi::step() {
 
+	return true;
 }
 
-void Joi::render() {
+bool Joi::render() {
 
+	return true;
 }
 
-void Joi::end() {
+bool Joi::end() {
 	glfwTerminate();
+
+	return true;
 }
 
-void Joi::run() {
+bool Joi::run() {
 	init();
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -25,4 +36,6 @@ void Joi::run() {
 		step();
 	}
 	end();
+
+	return true;
 }

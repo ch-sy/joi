@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+﻿cmake_minimum_required(VERSION 3.0)
 
 project(joi)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(JOI_VERSION_MAJOR "0")
 set(JOI_VERSION_MINOR "1")
@@ -22,14 +26,24 @@ include_directories(include)
 
 set(INC
 	src/joi.h
+	src/resourceManager.h
+	src/sprite.h
 )
 
 set(SRC
 	src/joi.cpp
 	src/main.cpp
+	src/resourceManager.cpp
+	src/sprite.cpp
 )
+
 
 add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	target_link_libraries(${PROJECT_NAME} c++experimental)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	target_link_libraries(joi stdc++fs)
+endif()
 
 install(TARGETS joi RUNTIME DESTINATION bin)
