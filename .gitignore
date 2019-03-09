@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+#Ignored paths
+/bin
+/build
