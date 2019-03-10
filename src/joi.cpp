@@ -5,6 +5,7 @@ bool Joi::init() {
 		return false;
 	
 	resources.loadSprites("..\\sprites");
+
 	window = glfwCreateWindow(1024, 768, "Journey on ice", NULL, NULL);
 	if (window == NULL)
 		return false;
