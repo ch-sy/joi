@@ -33,6 +33,7 @@ set(INC
 	src/joi.h
 	src/resourceManager.h
 	src/sprite.h
+	src/aseprite.h
 )
 
 set(SRC
@@ -40,6 +41,7 @@ set(SRC
 	src/main.cpp
 	src/resourceManager.cpp
 	src/sprite.cpp
+	src/aseprite.cpp
 )
 
 
