@@ -17,10 +17,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin")
 
+# glfw Library
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(deps/glfw)
+
+# glm Library
+set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
+add_subdirectory(deps/glm)
 
 include_directories(include)
 
@@ -40,6 +45,7 @@ set(SRC
 
 add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
+target_link_libraries(joi glm)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	target_link_libraries(${PROJECT_NAME} c++experimental)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
