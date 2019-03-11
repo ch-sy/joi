@@ -1,5 +1,11 @@
 ﻿cmake_minimum_required(VERSION 3.0)
 
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.111.tar.gz"
+    SHA1 "4189bbd869abe4eb69b5303d3f916c03d34dc154"
+)
+
 project(joi)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -17,21 +23,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin")
 
-# glfw Library
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(deps/glfw)
+# glfw
+hunter_add_package(glfw)
+find_package(glfw3 REQUIRED)
 
-# glm Library
-set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
-add_subdirectory(deps/glm)
+# glfw
+hunter_add_package(glm)
+find_package(glm REQUIRED)
 
-# zlib Library
-set(ZLIB_TESTS OFF CACHE BOOL "" FORCE)
-add_subdirectory(deps/zlib)
-
-include_directories(include)
+# zlib
+hunter_add_package(ZLIB)
+find_package(ZLIB CONFIG REQUIRED)
 
 set(INC
 	src/joi.h
@@ -52,9 +54,10 @@ set(SRC
 add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
 target_link_libraries(joi glm)
-target_link_libraries(joi zlib)
+target_link_libraries(joi ZLIB::zlib)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	target_link_libraries(${PROJECT_NAME} c++experimental)
+	target_link_libraries(joi c++experimental)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	target_link_libraries(joi stdc++fs)
 endif()

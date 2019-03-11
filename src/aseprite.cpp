@@ -1,5 +1,4 @@
 #include "aseprite.h"
-#include "zlib.h"
 #include <map>
 #include <string>
 
