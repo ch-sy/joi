@@ -6,23 +6,18 @@
 
 namespace fs = std::filesystem;
 
+
 void ResourceManager::loadSprites(std::string sprite_path) {
+	std::cout << "Loading sprites...\n";
 	for (const auto & entry : std::filesystem::directory_iterator(sprite_path)) {
-		std::cout << "Loading: " << entry.path() << std::endl;
-		Aseprite test;
-		if (decodeAseprite(test, "..\\sprites\\munchkin.aseprite")) {
-			std::cout << "Success!\n";
-			std::cout << "Width: " << test.dimension.x << " Height: " << test.dimension.y << std::endl;
-			std::cout << "Layers:\n";
-			for (AsepriteLayer& layer : test.layers)
-				std::cout << layer.layer_name << std::endl;
+		std::string sprite_name = entry.path().filename().stem().string();
+		std::cout << sprite_name << ": ";
+		if (decodeAseprite(sprites[sprite_name], entry.path().string())) {
+			std::cout << "OK\n";
 		}
-		else
-			std::cout << "Failure!\n";
 	}
-		
 }
 
-const Sprite& ResourceManager::getSprite(std::string sprite_name) {
+const Aseprite& ResourceManager::getSprite(std::string sprite_name) {
 	return sprites[sprite_name];
 }

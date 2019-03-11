@@ -35,6 +35,10 @@ find_package(glm REQUIRED)
 hunter_add_package(ZLIB)
 find_package(ZLIB CONFIG REQUIRED)
 
+# vorbis
+hunter_add_package(vorbis)
+find_package(vorbis CONFIG REQUIRED)
+
 set(INC
 	src/joi.h
 	src/resourceManager.h
@@ -55,6 +59,7 @@ add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
 target_link_libraries(joi glm)
 target_link_libraries(joi ZLIB::zlib)
+target_link_libraries(joi vorbis::vorbis)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	target_link_libraries(joi c++experimental)

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
 
 enum LoopAnimationDirection : glm::u8 {
 	lad_forward,
@@ -12,7 +13,7 @@ enum LoopAnimationDirection : glm::u8 {
 
 struct AsepriteFrame {
 	glm::u16					duration;
-	std::vector<glm::u16>		linked_cel_ids;
+	std::vector<glm::u16>		cel_ids;
 };
 
 struct AsepriteLayer {
@@ -44,4 +45,4 @@ struct Aseprite {
 
 
 // Reference: https://github.com/aseprite/aseprite/blob/master/docs/ase-file-specs.md
-bool decodeAseprite(Aseprite& aseprite, const char* file);
+bool decodeAseprite(Aseprite& aseprite, std::string file);

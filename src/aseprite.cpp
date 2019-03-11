@@ -1,6 +1,7 @@
 #include "aseprite.h"
 #include <map>
 #include <string>
+#include <zlib.h>
 
 #define READ_NUMBER(val) is.read(reinterpret_cast<char*>(&val), sizeof(val))
 
@@ -24,7 +25,7 @@ inline bool operator<(const CelAppearance& v1, const CelAppearance& v2) {
 }
 
 // Reference: https://github.com/aseprite/aseprite/blob/master/docs/ase-file-specs.md
-bool decodeAseprite(Aseprite& aseprite, const char* file) {
+bool decodeAseprite(Aseprite& aseprite, std::string file) {
 	std::ifstream is(file, std::ios::binary);
 	if (is.fail()) {
 		std::cout << "Failed to open aseprite file";
@@ -58,6 +59,7 @@ bool decodeAseprite(Aseprite& aseprite, const char* file) {
 	std::vector<glm::u16vec3> cel_link_appearances;		// (frame_id | frame_to_link | layer)
 	// Iterate through each frame in the file
 	for (glm::u16 frame_id = 0; frame_id < num_frames; frame_id++) {
+		//std::cout << "Frame: " << frame_id << "\n";
 		is.seekg(4, std::ios_base::cur);
 		// Magic number check
 		glm::u16 magic_number;
@@ -75,12 +77,14 @@ bool decodeAseprite(Aseprite& aseprite, const char* file) {
 		READ_NUMBER(num_chunks);
 		if (num_chunks == 0)
 			num_chunks = num_chunks_old;
+		
 		// Iterate through each chunk in this frame
 		for (glm::u32 chunk_id = 0; chunk_id < num_chunks; chunk_id++) {
 			glm::u32 chunk_size;
 			READ_NUMBER(chunk_size);
 			glm::u16 chunk_type;
 			READ_NUMBER(chunk_type);
+			//std::cout << "Chunk: 0x" << std::hex << chunk_type << std::dec << "\n";
 			switch (chunk_type) {
 			case 0x2004: { // Layer Chunk
 				is.seekg(16, std::ios_base::cur);
@@ -90,42 +94,63 @@ bool decodeAseprite(Aseprite& aseprite, const char* file) {
 			}
 			break;
 			case 0x2005: { // Cel Chunk
-				glm::u16 layer_id;
-				READ_NUMBER(layer_id);
-				glm::i16vec2 position;
-				READ_NUMBER(position);
+				AsepriteCel cel;
+				READ_NUMBER(cel.layer_id);
+				READ_NUMBER(cel.position);
 				is.seekg(1, std::ios_base::cur);
 				glm::u16 cel_type;
 				READ_NUMBER(cel_type);
 				is.seekg(7, std::ios_base::cur);
-				switch (cel_type) {
-				case 0: { // Raw Cel
-					AsepriteCel cel;
-					cel.position = position;
-					cel.layer_id = layer_id;
+				if (cel_type == 1) {
+					// Linked Cel
+					glm::u16 frame_position;
+					READ_NUMBER(frame_position);
+					// Search later on for this cell
+					cel_link_appearances.push_back(glm::u16vec3(frame_id, frame_position, cel.layer_id));
+					//std::cout << "Linked Cel for Layer " << aseprite.layers[cel.layer_id].layer_name << " on Frame " << frame_position << "\n";
+				}
+				else {
 					READ_NUMBER(cel.dimension);
 					size_t pixel_count = cel.dimension.x * cel.dimension.y;
 					cel.pixel_data.resize(pixel_count);
-					is.read(reinterpret_cast<char*>(cel.pixel_data.data()), pixel_count * 4);
+					if (cel_type == 0) {
+						// Raw Image
+						is.read(reinterpret_cast<char*>(cel.pixel_data.data()), pixel_count * 4);
+						//std::cout << "Raw Cel for Layer " << aseprite.layers[cel.layer_id].layer_name << "\n";
+					} 
+					else {
+						//std::cout << "Decompress...\n";
+						// Compressed Image
+						//is.seekg(2, std::ios_base::cur);
+						size_t compressed_size = chunk_size - 26;
+						std::vector<Bytef> compressed_image;
+						compressed_image.resize(compressed_size);
+						is.read(reinterpret_cast<char*>(compressed_image.data()), compressed_size);
+
+						z_stream infstream;
+						infstream.zalloc = Z_NULL;
+						infstream.zfree = Z_NULL;
+						infstream.opaque = Z_NULL;
+						infstream.avail_in = (uInt)compressed_size;					// size of input
+						infstream.next_in = (Bytef *)compressed_image.data();			// input
+						infstream.avail_out = (uInt)pixel_count*4;					// size of output
+						infstream.next_out = (Bytef *)cel.pixel_data.data();		// output
+
+						// the actual DE-compression work.
+						inflateInit(&infstream);
+						inflate(&infstream, Z_NO_FLUSH);
+						inflateEnd(&infstream);
+						//is.seekg(chunk_size - 26, std::ios_base::cur);
+						//std::cout << "Compressed Cel for Layer " << aseprite.layers[cel.layer_id].layer_name << "\n";
+					}
 					const glm::u16 cel_id = glm::u16(aseprite.cels.size());
 					// Save the cel in this sprite
 					aseprite.cels.push_back(cel);
 					// Save where you can find the first cel
-					cel_appearances[{frame_id, layer_id}] = cel_id;
+					cel_appearances[{frame_id, cel.layer_id}] = cel_id;
 					// Link this frame with the new cel
-					aseprite.frames[frame_id].linked_cel_ids.push_back(cel_id);
-				}
-				break;
-				case 1: // Linked Cel
-					glm::u16 frame_position;
-					READ_NUMBER(frame_position);
-					// Search later on for this cell
-					cel_link_appearances.push_back(glm::u16vec3(frame_id, frame_position, layer_id));
-				break;
-				case 2: { // Compressed Image
-
-				}
-				break;
+					aseprite.frames[frame_id].cel_ids.push_back(cel_id);
+					
 				}
 			}
 			break;
@@ -136,7 +161,7 @@ bool decodeAseprite(Aseprite& aseprite, const char* file) {
 	}
 	// Save the links in the frames with the cell id
 	for (glm::u16vec3 &to_link : cel_link_appearances) {
-		aseprite.frames[to_link.x].linked_cel_ids.push_back(cel_appearances[{to_link.y, to_link.z}]);
+		aseprite.frames[to_link.x].cel_ids.push_back(cel_appearances[{to_link.y, to_link.z}]);
 	}
 	is.close();
 	return true;
