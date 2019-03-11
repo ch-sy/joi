@@ -27,6 +27,10 @@ add_subdirectory(deps/glfw)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
 add_subdirectory(deps/glm)
 
+# zlib Library
+set(ZLIB_TESTS OFF CACHE BOOL "" FORCE)
+add_subdirectory(deps/zlib)
+
 include_directories(include)
 
 set(INC
@@ -48,6 +52,7 @@ set(SRC
 add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
 target_link_libraries(joi glm)
+target_link_libraries(joi zlib)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	target_link_libraries(${PROJECT_NAME} c++experimental)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

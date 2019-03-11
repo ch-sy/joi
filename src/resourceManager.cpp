@@ -3,6 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include "aseprite.h"
+
 namespace fs = std::filesystem;
 
 void ResourceManager::loadSprites(std::string sprite_path) {
