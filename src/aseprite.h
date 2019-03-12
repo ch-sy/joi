@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "glad/glad.h"
 
 enum LoopAnimationDirection : glm::u8 {
 	lad_forward,
@@ -26,6 +27,7 @@ struct AsepriteCel {
 	glm::i16vec2				position;
 	glm::u16vec2				dimension;
 	std::vector<glm::u8vec4>	pixel_data;
+	GLuint						texture_id;
 };
 
 struct AsepriteTag {

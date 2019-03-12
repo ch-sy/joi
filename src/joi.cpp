@@ -3,14 +3,26 @@
 bool Joi::init() {
 	if (glfwInit() == GLFW_FALSE)
 		return false;
-	
-	resources.loadSprites("..\\sprites");
-	const Aseprite& sprite = resources.getSprite("spr_munchkin");
-	std::cout << "Breite: " << sprite.layers[0].layer_name << std::endl;
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	
 	window = glfwCreateWindow(1024, 768, "Journey on ice", NULL, NULL);
-	if (window == NULL)
+	if (window == NULL) {
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
 		return false;
+	}
+	glfwMakeContextCurrent(window);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return false;
+	}
+
+	resources.loadSprites("..\\sprites");
+	std::cout << "Lname: " << resources.getSprite("spr_munchkin")->layers[0].layer_name << "\n";
+	resources.loadShaders("..\\shaders");
 
 	return true;
 }
@@ -21,6 +33,8 @@ bool Joi::step() {
 }
 
 bool Joi::render() {
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	return true;
 }
@@ -34,9 +48,10 @@ bool Joi::end() {
 bool Joi::run() {
 	init();
 	while (!glfwWindowShouldClose(window)) {
-		glfwPollEvents();
 		render();
+		glfwSwapBuffers(window);
 		step();
+		glfwPollEvents();
 	}
 	end();
 

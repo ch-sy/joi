@@ -1,3 +1,5 @@
+#include "glad/glad.h"
+#include "sprite.h"
 #include <GLFW/glfw3.h>
 #include "resourceManager.h"
 
