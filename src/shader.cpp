@@ -25,7 +25,7 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 		fragmentCode = fShaderStream.str();
 	}
 	catch (std::ifstream::failure e) {
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+		std::cout << "File not found!" << std::endl;
 	}
 	const char* vShaderCode = vertexCode.c_str();
 	const char * fShaderCode = fragmentCode.c_str();
@@ -35,18 +35,18 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vShaderCode, NULL);
 	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	checkCompileErrors(vertex, "vertex");
 	// fragment Shader
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	checkCompileErrors(fragment, "fragment");
 	// shader Program
 	ID = glCreateProgram();
 	glAttachShader(ID, vertex);
 	glAttachShader(ID, fragment);
 	glLinkProgram(ID);
-	checkCompileErrors(ID, "PROGRAM");
+	checkCompileErrors(ID, "program");
 	// delete the shaders as they're linked into our program now and no longer necessary
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
@@ -79,18 +79,23 @@ void Shader::setFloat(const std::string &name, float value) const {
 void Shader::checkCompileErrors(unsigned int shader, std::string type) {
 	int success;
 	char infoLog[1024];
-	if (type != "PROGRAM") {
+	if (type != "program") {
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		
 		if (!success) {
 			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			std::cout << "Error compiling " << type << "shader\n" << infoLog;
 		}
 	}
 	else {
 		glGetProgramiv(shader, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			std::cout << "Error by linking " << type << "\n" << infoLog;
+		}
+		else
+		{
+			std::cout << "Ok\n";
 		}
 	}
 }

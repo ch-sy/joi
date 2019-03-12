@@ -21,7 +21,7 @@ bool Joi::init() {
 	}
 
 	resources.loadSprites("..\\sprites");
-	std::cout << "Lname: " << resources.getSprite("spr_munchkin")->layers[0].layer_name << "\n";
+	std::cout << "\n";
 	resources.loadShaders("..\\shaders");
 
 	return true;

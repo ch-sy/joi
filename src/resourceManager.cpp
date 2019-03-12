@@ -1,4 +1,4 @@
-#include "resourceManager.h"
+﻿#include "resourceManager.h"
 #include <string>
 #include <iostream>
 #include <filesystem>
@@ -8,10 +8,10 @@ namespace fs = std::filesystem;
 
 
 void ResourceManager::loadSprites(std::string sprite_path) {
-	std::cout << "Loading sprites...\n";
+	std::cout << "Sprites\n";
 	for (const auto & entry : std::filesystem::directory_iterator(sprite_path)) {
 		std::string sprite_name = entry.path().filename().stem().string();
-		std::cout << sprite_name << ": ";
+		std::cout << ">> " << sprite_name << ": ";
 		Aseprite& sprite = sprites[sprite_name];
 		if (!decodeAseprite(sprite, entry.path().string()))
 			continue;
@@ -25,17 +25,16 @@ void ResourceManager::loadSprites(std::string sprite_path) {
 		}
 		std::cout << "Ok\n";
 	}
-
 }
 
 void ResourceManager::loadShaders(std::string shader_path) {
-	std::cout << "Loading shaders...\n";
+	std::cout << "Shaders\n";
 	for (const auto & entry : std::filesystem::directory_iterator(shader_path)) {
 		std::string shader_name = entry.path().filename().stem().string();
-		
 		if (shaders.count(shader_name) == 0) {
-			std::cout << shader_name << ": ";
-			Shader shader(entry.path().stem().string()+".vs", entry.path().stem().string() + ".fs");
+			std::string s_p_n = shader_path + "\\" + shader_name;
+			std::cout << ">> " << shader_name << ": ";
+			Shader shader(s_p_n + ".vert", s_p_n + ".frag");
 			shaders[shader_name] = shader;
 		}
 	}
