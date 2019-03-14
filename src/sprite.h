@@ -6,7 +6,7 @@
 
 class SpriteRenderer {
 public:
-	void drawSprite(Shader &shader, const Aseprite* sprite, glm::vec2 position, int frame = 0);
+	void drawSprite(const Shader &shader, const Aseprite& sprite, glm::vec2 position, int frame = 0) const;
 	void initRenderData();
 private:
 	Shader shader;

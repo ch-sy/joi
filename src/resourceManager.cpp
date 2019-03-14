@@ -40,15 +40,22 @@ void ResourceManager::loadShaders(std::string shader_path) {
 	}
 }
 
-const Aseprite* ResourceManager::getSprite(std::string sprite_name) {
-	if(sprites.count(sprite_name) > 0)
-		return &sprites[sprite_name];
-	else {
-		std::cout << "Sprite \"" << sprite_name << "\" doesn't exists!";
-		return nullptr;
+const Aseprite& ResourceManager::getSprite(std::string sprite_name) const {
+	try {
+		return sprites.at(sprite_name);
+	}
+	catch (...) {
+		std::cout << "Sprite \"" << sprite_name << "\" doesn't exists!\n";
+		return spr_null;
 	}
 }
 
-Shader ResourceManager::getShader(std::string shader_name) {
-	return shaders[shader_name];
+const Shader& ResourceManager::getShader(std::string shader_name) const {
+	try {
+		return shaders.at(shader_name);
+	}
+	catch (...) {
+		std::cout << "Shader \"" << shader_name << "\" doesn't exists!\n";
+		throw std::out_of_range("Shader not found!");
+	}
 }

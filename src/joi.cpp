@@ -6,6 +6,8 @@ int g_height = 768;
 
 Joi* resize_context;
 void window_size_callback(GLFWwindow* window, int width, int height) {
+	if (window == NULL)
+		return;
 	g_width = width;
 	g_height = height;
 	glViewport(0, 0, width, height);

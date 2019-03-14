@@ -55,7 +55,7 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 
 // activate the shader
 // ------------------------------------------------------------------------
-void Shader::use() {
+void Shader::use() const {
 	glUseProgram(ID);
 }
 

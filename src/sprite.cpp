@@ -1,12 +1,13 @@
 #include "sprite.h"
 
-void SpriteRenderer::drawSprite(Shader &shader, const Aseprite* sprite, glm::vec2 position, int frame){
-	for (auto &cel : sprite->frames[frame % sprite->frames.size()].cel_ids) {
+void SpriteRenderer::drawSprite(const Shader &shader, const Aseprite &sprite, glm::vec2 position, int frame) const {
+	if(sprite.frames.size() > 0)
+	for (auto &cel : sprite.frames[frame % sprite.frames.size()].cel_ids) {
 		glm::mat4 mat_model = { 
-			sprite->cels[cel].dimension.x, 0.0f, 0.0f, 0.0f,
-			0.0f, sprite->cels[cel].dimension.y, 0.0f, 0.0f,
+			sprite.cels[cel].dimension.x, 0.0f, 0.0f, 0.0f,
+			0.0f, sprite.cels[cel].dimension.y, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
-			position.x + sprite->cels[cel].position.x, position.y + sprite->cels[cel].position.y, 0.0f, 1.0f };
+			position.x + sprite.cels[cel].position.x, position.y + sprite.cels[cel].position.y, 0.0f, 1.0f };
 		//glm::mat4 mat_model = glm::mat4(1);
 		//mat_model *= glm::vec4(sprite->cels[cel_id].dimension, 0.0f, 1.0f);
 
@@ -14,7 +15,7 @@ void SpriteRenderer::drawSprite(Shader &shader, const Aseprite* sprite, glm::vec
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glBindTexture(GL_TEXTURE_2D, sprite->cels[cel].texture_id);
+		glBindTexture(GL_TEXTURE_2D, sprite.cels[cel].texture_id);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 	
