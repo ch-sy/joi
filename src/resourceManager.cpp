@@ -23,7 +23,7 @@ void ResourceManager::loadSprites(std::string sprite_path) {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		}
-		std::cout << "Ok\n";
+		std::cout << "\t\tOk\n";
 	}
 }
 
@@ -49,6 +49,6 @@ const Aseprite* ResourceManager::getSprite(std::string sprite_name) {
 	}
 }
 
-const Shader ResourceManager::getShader(std::string shader_name) {
+Shader ResourceManager::getShader(std::string shader_name) {
 	return shaders[shader_name];
 }

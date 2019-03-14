@@ -59,7 +59,6 @@ set(SRC
 	src/shader.cpp
 )
 
-
 add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
 target_link_libraries(joi glm)
@@ -71,5 +70,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	target_link_libraries(joi stdc++fs)
 endif()
+
+
 
 install(TARGETS joi RUNTIME DESTINATION bin)

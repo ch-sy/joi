@@ -154,6 +154,26 @@ bool decodeAseprite(Aseprite& aseprite, std::string file) {
 				}
 			}
 			break;
+			case 0x2022: {
+				AsepriteSlice slice;
+				glm::u32 slice_number;
+				READ_NUMBER(slice_number);
+				glm::u32 slice_flag;
+				READ_NUMBER(slice_flag);
+				is.seekg(4, std::ios_base::cur);
+				read_string(is, slice.name);
+				for (glm::u32 i = 0; i < slice_number; i++) {
+					is.seekg(4, std::ios_base::cur);
+					READ_NUMBER(slice.origin);
+					READ_NUMBER(slice.dimension);
+					if (slice_flag & 1)
+						is.seekg(16, std::ios_base::cur);
+					if (slice_flag & 2)
+						READ_NUMBER(slice.pivot);
+				}
+				aseprite.slices.push_back(slice);
+			}
+						 break;
 			default:
 				is.seekg(chunk_size - 6, std::ios_base::cur);
 			}

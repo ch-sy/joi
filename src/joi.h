@@ -7,11 +7,15 @@ class Joi {
 	private:
 		GLFWwindow * window;
 		ResourceManager resources;
+		GLuint vertexbuffer;
+		SpriteRenderer renderer;
+		Shader shd_default;
 
 		bool init();
 		bool step();
-		bool render();
+		
 		bool end();
 	public:
+		bool render();
 		bool run();
 };

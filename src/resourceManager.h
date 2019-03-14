@@ -14,5 +14,5 @@ public:
 	void loadSprites(std::string sprite_path);
 	void loadShaders(std::string shader_path);
 	const Aseprite* getSprite(std::string sprite_name);
-	const Shader getShader(std::string shader_name);
+	Shader getShader(std::string shader_name);
 };

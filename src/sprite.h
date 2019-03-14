@@ -6,15 +6,10 @@
 
 class SpriteRenderer {
 public:
-	SpriteRenderer(Shader &shader);
-	~SpriteRenderer();
-
-	void DrawSprite(Aseprite &sprite, glm::vec2 position,
-		glm::vec2 size = glm::vec2(10, 10), GLfloat rotate = 0.0f,
-		glm::vec3 color = glm::vec3(1.0f));
+	void drawSprite(Shader &shader, const Aseprite* sprite, glm::vec2 position, int frame = 0);
+	void initRenderData();
 private:
 	Shader shader;
-	GLuint quadVAO;
-
-	void initRenderData();
+	GLuint vertexbuffer;
+	GLuint vao;
 };

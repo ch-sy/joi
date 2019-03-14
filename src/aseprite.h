@@ -37,12 +37,20 @@ struct AsepriteTag {
 	std::string					tag_name;
 };
 
+struct AsepriteSlice {
+	glm::i32vec2				origin;
+	glm::u32vec2				dimension;
+	glm::i32vec2				pivot;
+	std::string					name;
+};
+
 struct Aseprite {
 	glm::u16vec2				dimension;
 	std::vector<AsepriteFrame>	frames;
 	std::vector<AsepriteLayer>	layers;
 	std::vector<AsepriteCel>	cels;
 	std::vector<AsepriteTag>	tags;
+	std::vector<AsepriteSlice>	slices;
 };
 
 

@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(std::string vertexPath, std::string fragmentPath) {
 	// 1. retrieve the vertex/fragment source code from filePath
@@ -74,6 +75,11 @@ void Shader::setFloat(const std::string &name, float value) const {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
+// ------------------------------------------------------------------------
+void Shader::setMatrix(const std::string &name, glm::mat4 value) const {
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, false, glm::value_ptr(value));
+}
+
 // utility function for checking shader compilation/linking errors.
 // ------------------------------------------------------------------------
 void Shader::checkCompileErrors(unsigned int shader, std::string type) {
@@ -81,21 +87,20 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
 	char infoLog[1024];
 	if (type != "program") {
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-		
 		if (!success) {
 			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "Error compiling " << type << "shader\n" << infoLog;
+			std::cout << "\nError compiling " << type << "shader\n" << infoLog << std::endl;
 		}
 	}
 	else {
 		glGetProgramiv(shader, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "Error by linking " << type << "\n" << infoLog;
+			std::cout << "Error by linking " << type << "\n" << infoLog << std::endl;
 		}
 		else
 		{
-			std::cout << "Ok\n";
+			std::cout << "\t\tOk\n";
 		}
 	}
 }
