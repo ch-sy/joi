@@ -3,17 +3,19 @@
 
 #include <string>
 #include <unordered_map>
+#include <map>
 #include "Aseprite.h"
 #include "shader.h"
 
 class ResourceManager {
 private:
-	std::unordered_map<std::string, Aseprite> sprites;
-	std::unordered_map<std::string, Shader> shaders;
+	std::map<std::string, Aseprite> sprites;
+	GLuint cel_vertex_buffer;
+	std::unordered_map<std::string, GLint> shaders;
 	const Aseprite spr_null;
 public:
 	void loadSprites(std::string sprite_path);
 	void loadShaders(std::string shader_path);
-	const Aseprite& getSprite(std::string sprite_name) const;
-	const Shader& getShader(std::string shader_name) const;
+	const Aseprite& getSprite(const std::string &sprite_name) const;
+	GLint getShader(std::string shader_name) const;
 };

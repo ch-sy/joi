@@ -2,14 +2,13 @@
 #include "shader.h"
 #include "glad/glad.h"
 #include "aseprite.h"
-
+#include <glm/gtc/type_ptr.hpp>
 
 class SpriteRenderer {
 public:
-	void drawSprite(const Shader &shader, const Aseprite& sprite, glm::vec2 position, int frame = 0) const;
-	void initRenderData();
+	void drawSprite(const Aseprite& sprite, glm::vec2 position, int frame = 0) const;
+	void initRenderData(GLint shader);
 private:
-	Shader shader;
-	GLuint vertexbuffer;
-	GLuint vao;
+	GLint shader;
+	GLint uni_model_vector;
 };

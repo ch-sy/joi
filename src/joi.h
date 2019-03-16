@@ -9,13 +9,16 @@ class Joi {
 		ResourceManager resources;
 		GLuint vertexbuffer;
 		SpriteRenderer renderer;
-		Shader shd_default;
+		GLint shd_default;
+		GLint uni_projection_view;
+		GLuint vao;
 
 		bool init();
 		bool step();
 		
 		bool end();
 	public:
+		Joi() {};
 		bool render();
 		bool run();
 };

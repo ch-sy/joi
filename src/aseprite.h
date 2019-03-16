@@ -26,6 +26,7 @@ struct AsepriteCel {
 	glm::u16					layer_id;
 	glm::i16vec2				position;
 	glm::u16vec2				dimension;
+	glm::u16					vertex_id;
 	std::vector<glm::u8vec4>	pixel_data;
 	GLuint						texture_id;
 };

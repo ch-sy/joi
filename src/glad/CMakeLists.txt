@@ -1,0 +1,19 @@
+﻿set(INC
+	src/glad/glad.h
+	src/glad/khrplatform.h
+	src/joi.h
+	src/resourceManager.h
+	src/sprite.h
+	src/aseprite.h
+	src/shader.h
+)
+
+set(SRC
+	src/glad/glad.c
+	src/joi.cpp
+	src/main.cpp
+	src/resourceManager.cpp
+	src/sprite.cpp
+	src/aseprite.cpp
+	src/shader.cpp
+)
