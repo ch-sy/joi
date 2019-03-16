@@ -36,8 +36,12 @@ hunter_add_package(ZLIB)
 find_package(ZLIB CONFIG REQUIRED)
 
 # vorbis
-hunter_add_package(vorbis)
-find_package(vorbis CONFIG REQUIRED)
+#hunter_add_package(vorbis)
+#find_package(vorbis CONFIG REQUIRED)
+
+# fmt
+hunter_add_package(fmt)
+find_package(fmt CONFIG REQUIRED)
 
 set(INC
 	src/glad/glad.h
@@ -63,7 +67,8 @@ add_executable(joi "${SRC}" "${INC}")
 target_link_libraries(joi glfw)
 target_link_libraries(joi glm)
 target_link_libraries(joi ZLIB::zlib)
-target_link_libraries(joi vorbis::vorbis)
+#target_link_libraries(joi vorbis::vorbis)
+target_link_libraries(joi fmt::fmt)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	target_link_libraries(joi c++experimental)

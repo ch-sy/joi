@@ -10,6 +10,27 @@ void SpriteRenderer::drawSprite(const Aseprite &sprite, glm::vec2 position, int 
 	}
 }
 
+void SpriteRenderer::drawText(const Aseprite &sprite, glm::vec2 position, const std::string& text) const {
+	glBindTexture(GL_TEXTURE_2D, sprite.cels[0].texture_id);
+	for (auto ch : text) {
+		std::string utf8_char = {ch};
+		if (ch == ' ') {
+			position.x += sprite.slices.at("space").dimension.x;
+			continue;
+		}
+		glUniform2fv(uni_model_vector, 1, glm::value_ptr(position));
+		try {
+			const AsepriteSlice& slice = sprite.slices.at(utf8_char);
+			glDrawArrays(GL_TRIANGLE_STRIP, slice.vertex_id, 4);
+			position.x += slice.dimension.x - slice.pivot.x;
+		}
+		catch (...) {
+			std::cout << "Char " << utf8_char << " not found\n";
+		}
+		
+	}
+}
+
 void SpriteRenderer::initRenderData(GLint shader) {
 	this->shader = shader;
 	uni_model_vector = glGetUniformLocation(shader, "model");

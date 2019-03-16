@@ -26,7 +26,7 @@ void ResourceManager::loadSprites(std::string sprite_path) {
 			const glm::vec2 pos = cel.position;
 			const glm::vec2 dim = cel.dimension;
 
-			cel.vertex_id = vertex_buffer_data.size()/2;
+			cel.vertex_id = vertex_buffer_data.size() / 2;
 			vertex_buffer_data.push_back(pos);
 			vertex_buffer_data.push_back(glm::vec2(0.0f, 0.0f));
 
@@ -38,6 +38,29 @@ void ResourceManager::loadSprites(std::string sprite_path) {
 
 			vertex_buffer_data.push_back(pos + dim);
 			vertex_buffer_data.push_back(glm::vec2(1.0f, 1.0f));
+		}
+
+		for (auto &slice : sprite.slices) {
+			const glm::vec2 pos = -slice.second.pivot;
+			const glm::vec2 dim = slice.second.dimension;
+			glm::vec2 texpos = slice.second.origin;
+			texpos -= sprite.cels[0].position;
+			glm::vec2 texdim = slice.second.dimension;
+			texpos /= sprite.cels[0].dimension;
+			texdim /= sprite.cels[0].dimension;
+			slice.second.vertex_id = vertex_buffer_data.size() / 2;
+			vertex_buffer_data.push_back(pos);
+			vertex_buffer_data.push_back(texpos);
+
+			vertex_buffer_data.push_back(pos + glm::vec2(dim.x, 0.0f));
+			vertex_buffer_data.push_back(texpos + glm::vec2(texdim.x, 0.0f));
+
+			vertex_buffer_data.push_back(pos + glm::vec2(0.0f, dim.y));
+			vertex_buffer_data.push_back(texpos + glm::vec2(0.0f, texdim.y));
+
+			vertex_buffer_data.push_back(pos + dim);
+			vertex_buffer_data.push_back(texpos + texdim);
+			
 		}
 		std::cout << "\t\tOk\n";
 	}

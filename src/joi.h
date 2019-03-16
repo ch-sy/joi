@@ -19,6 +19,6 @@ class Joi {
 		bool end();
 	public:
 		Joi() {};
-		bool render();
+		bool render(double frame_time);
 		bool run();
 };

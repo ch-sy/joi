@@ -171,7 +171,7 @@ bool decodeAseprite(Aseprite& aseprite, std::string file) {
 					if (slice_flag & 2)
 						READ_NUMBER(slice.pivot);
 				}
-				aseprite.slices.push_back(slice);
+				aseprite.slices[slice.name] = slice;
 			}
 						 break;
 			default:

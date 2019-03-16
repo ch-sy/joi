@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <map>
+#include <unordered_map>
 #include <string>
 #include "glad/glad.h"
 
@@ -43,6 +45,7 @@ struct AsepriteSlice {
 	glm::u32vec2				dimension;
 	glm::i32vec2				pivot;
 	std::string					name;
+	GLuint						vertex_id;
 };
 
 struct Aseprite {
@@ -51,7 +54,8 @@ struct Aseprite {
 	std::vector<AsepriteLayer>	layers;
 	std::vector<AsepriteCel>	cels;
 	std::vector<AsepriteTag>	tags;
-	std::vector<AsepriteSlice>	slices;
+	std::unordered_map<std::string, AsepriteSlice>		slices;
+	std::map<glm::u32, glm::u32> vertex_chars;
 };
 
 
