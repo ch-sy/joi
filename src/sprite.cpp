@@ -31,6 +31,26 @@ void SpriteRenderer::drawText(const Aseprite &sprite, glm::vec2 position, const 
 	}
 }
 
+int SpriteRenderer::getTextWidth(const Aseprite &sprite, const std::string& text) const {
+	int width = 0;
+	for (auto ch : text) {
+		std::string utf8_char = { ch };
+		if (ch == ' ') {
+			width += sprite.slices.at("space").dimension.x;
+			continue;
+		}
+		try {
+			const AsepriteSlice& slice = sprite.slices.at(utf8_char);
+			width += slice.dimension.x - slice.pivot.x;
+		}
+		catch (...) {
+			std::cout << "Char " << utf8_char << " not found\n";
+		}
+
+	}
+	return width;
+}
+
 void SpriteRenderer::initRenderData(GLint shader) {
 	this->shader = shader;
 	uni_model_vector = glGetUniformLocation(shader, "model");

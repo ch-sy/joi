@@ -27,7 +27,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin")
 hunter_add_package(glfw)
 find_package(glfw3 REQUIRED)
 
-# glfw
+# glm
 hunter_add_package(glm)
 find_package(glm REQUIRED)
 
@@ -42,6 +42,14 @@ find_package(ZLIB CONFIG REQUIRED)
 # fmt
 hunter_add_package(fmt)
 find_package(fmt CONFIG REQUIRED)
+
+# glog
+hunter_add_package(glog)
+find_package(glog CONFIG REQUIRED)
+
+# EntityX
+hunter_add_package(entityx)
+find_package(entityx CONFIG REQUIRED)
 
 set(INC
 	src/glad/glad.h
@@ -69,6 +77,8 @@ target_link_libraries(joi glm)
 target_link_libraries(joi ZLIB::zlib)
 #target_link_libraries(joi vorbis::vorbis)
 target_link_libraries(joi fmt::fmt)
+target_link_libraries(joi entityx::entityx)
+target_link_libraries(joi glog::glog)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	target_link_libraries(joi c++experimental)

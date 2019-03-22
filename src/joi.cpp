@@ -24,20 +24,13 @@ bool Joi::init() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	
-	window = glfwCreateWindow(g_width, g_height, "Journey on ice", NULL, NULL);
-	if (window == NULL) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return false;
-	}
+	CHECK( window = glfwCreateWindow(g_width, g_height, "Journey on ice", NULL, NULL) ) << "Failed to create GLFW window";
+
 	glfwMakeContextCurrent(window);
 	glfwSetWindowSizeCallback(window, window_size_callback);
 	
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return false;
-	}
+	CHECK( gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) )  << "Failed to initialize GLAD";
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -59,6 +52,7 @@ bool Joi::init() {
 	uni_projection_view = glGetUniformLocation(shd_default, "proj_view");
 	renderer.initRenderData(shd_default);
 
+
 	return true;
 }
 
@@ -69,19 +63,21 @@ bool Joi::step() {
 
 bool Joi::render(double frame_time) {
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	float pixel_size = glm::round(g_width / 320.0f);
+	float pixel_size = glm::round(g_width / 256.0f);
 	if (pixel_size < 1)
 		pixel_size = 1;
+	float screen_width = float(g_width) / pixel_size;
 	
-	glm::mat4 projection_view = glm::ortho(0.0f, float(g_width) / pixel_size, float(g_height) / pixel_size, 0.0f);
+	glm::mat4 projection_view = glm::ortho(0.0f, screen_width, float(g_height) / pixel_size, 0.0f);
 	glUniformMatrix4fv(uni_projection_view, 1, false, glm::value_ptr(projection_view));
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	const Aseprite& fnt_good_neighbors = resources.getSprite("fnt_good_neighbors");
-	renderer.drawText(fnt_good_neighbors, glm::vec2(4, 4), fmt::format("FT: {:.2f}ms", 1000*frame_time));
-	renderer.drawText(fnt_good_neighbors, glm::vec2(4, 20), fmt::format("Test", 1000 * frame_time));
+	//renderer.drawText(fnt_good_neighbors, glm::vec2(4, 4), fmt::format("FT: {:.2f}ms", 1000*frame_time));
+	std::string str_header = "A game by Christian Seybert";
+	renderer.drawText(fnt_good_neighbors, glm::vec2((screen_width-renderer.getTextWidth(fnt_good_neighbors, str_header))/2, 20+sin(glfwGetTime()*0.3)*15), str_header);
 	const Aseprite& spr_old_hut = resources.getSprite("spr_old_hut");
-	renderer.drawSprite(spr_old_hut, glm::vec2(16, 16), glfwGetTime()*10);
+	renderer.drawSprite(spr_old_hut, glm::vec2(16, 64), glfwGetTime()*10);
 	glfwSwapBuffers(window);
 	return true;
 }
@@ -105,6 +101,11 @@ bool Joi::run() {
 		double d_time = 0.0;
 		for (int i = 0; i < scale; i++)
 			d_time += times[i];
+    if (true) {
+                
+    } else {
+      1 == 3;
+    }
 		render(d_time / scale);
 		step();
 		glfwPollEvents();

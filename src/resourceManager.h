@@ -14,6 +14,7 @@ private:
 	std::unordered_map<std::string, GLint> shaders;
 	const Aseprite spr_null;
 public:
+        ResourceManager(){};
 	void loadSprites(std::string sprite_path);
 	void loadShaders(std::string shader_path);
 	const Aseprite& getSprite(const std::string &sprite_name) const;

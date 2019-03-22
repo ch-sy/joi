@@ -34,3 +34,4 @@
 #Ignored paths
 /bin
 /build
+log/
